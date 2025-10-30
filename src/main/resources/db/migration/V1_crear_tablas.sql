@@ -1,4 +1,3 @@
--- V1__crear_tablas.sql
 CREATE TABLE BloodType
 (
     id   INT AUTO_INCREMENT PRIMARY KEY,
