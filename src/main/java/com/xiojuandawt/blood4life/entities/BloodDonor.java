@@ -10,7 +10,7 @@ public class BloodDonor {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private Integer id;
 
 //  @Column(name = "bloodtype_id")
 //  private int bloodTypeId;

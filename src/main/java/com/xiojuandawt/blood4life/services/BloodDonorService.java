@@ -11,5 +11,7 @@ public interface BloodDonorService {
 
   BloodDonorDTO createNew(BloodDonor bloodDonor);
 
+  BloodDonorDTO update(BloodDonor bloodDonor);
+
   void delete(int id);
 }

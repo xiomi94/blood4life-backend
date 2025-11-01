@@ -2,12 +2,14 @@ package com.xiojuandawt.blood4life.services;
 
 import com.xiojuandawt.blood4life.dto.BloodDonorDTO;
 import com.xiojuandawt.blood4life.entities.BloodDonor;
+import com.xiojuandawt.blood4life.exception.ResourceNotFoundException;
 import com.xiojuandawt.blood4life.repositories.BloodDonorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BloodDonorServiceImpl implements BloodDonorService{
@@ -37,7 +39,19 @@ public class BloodDonorServiceImpl implements BloodDonorService{
     return newBloodDonorDTO;
   }
 
+  @Override
+  public BloodDonorDTO update(BloodDonor bloodDonor) {
+    Optional<BloodDonor> bloodDonorInDatabase = this.bloodDonorRepository.findById(bloodDonor.getId());
 
+    if (bloodDonorInDatabase.isEmpty()) {
+      throw new ResourceNotFoundException();
+    }
+
+    BloodDonor updatedBloodDonor = this.bloodDonorRepository.save(bloodDonor);
+    BloodDonorDTO updatedBloodDonorDTO = this.parseEntityToDto(updatedBloodDonor);
+
+    return updatedBloodDonorDTO;
+  }
 
   @Override
   public void delete(int id) {
