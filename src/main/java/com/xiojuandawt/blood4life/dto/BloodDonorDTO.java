@@ -1,20 +1,10 @@
-package com.xiojuandawt.blood4life.entities;
-
-import jakarta.persistence.*;
+package com.xiojuandawt.blood4life.dto;
 
 import java.util.Date;
 
-@Entity
-@Table(name = "blood_donor")
-public class BloodDonor {
+public class BloodDonorDTO {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
-
-//  @Column(name = "bloodtype_id")
-//  private int bloodTypeId;
-
+  private int id;
   private String dni;
   private String firstName;
   private String lastName;
@@ -22,23 +12,11 @@ public class BloodDonor {
   private String email;
   private String phoneNumber;
   private Date dateOfBirth;
-  private String password;
 
-  public BloodDonor() {
+  public BloodDonorDTO() {
   }
 
-  public BloodDonor(String dni, String firstName, String lastName, String gender, String email, String phoneNumber, Date dateOfBirth, String password) {
-    this.dni = dni;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.gender = gender;
-    this.email = email;
-    this.phoneNumber = phoneNumber;
-    this.dateOfBirth = dateOfBirth;
-    this.password = password;
-  }
-
-  public BloodDonor(int id, String dni, String firstName, String lastName, String gender, String email, String phoneNumber, Date dateOfBirth, String password) {
+  public BloodDonorDTO(int id, String dni, String firstName, String lastName, String gender, String email, String phoneNumber, Date dateOfBirth) {
     this.id = id;
     this.dni = dni;
     this.firstName = firstName;
@@ -47,7 +25,6 @@ public class BloodDonor {
     this.email = email;
     this.phoneNumber = phoneNumber;
     this.dateOfBirth = dateOfBirth;
-    this.password = password;
   }
 
   public int getId() {
@@ -112,28 +89,5 @@ public class BloodDonor {
 
   public void setDateOfBirth(Date dateOfBirth) {
     this.dateOfBirth = dateOfBirth;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  @Override
-  public String toString() {
-    return "BloodDonor{" +
-      "id=" + id +
-      ", dni='" + dni + '\'' +
-      ", firstName='" + firstName + '\'' +
-      ", lastName='" + lastName + '\'' +
-      ", gender='" + gender + '\'' +
-      ", email='" + email + '\'' +
-      ", phoneNumber='" + phoneNumber + '\'' +
-      ", dateOfBirth=" + dateOfBirth +
-      ", password='" + password + '\'' +
-      '}';
   }
 }
