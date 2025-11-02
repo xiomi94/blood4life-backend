@@ -17,7 +17,7 @@ public class SecurityConfig {
 
     // 🔹 Dominios permitidos (Firebase)
     configuration.setAllowedOrigins(List.of(
-      "https://blood4life-e3cc2.web.app/"
+      "https://blood4life-e3cc2.web.app"
     ));
 
     // 🔹 Métodos HTTP permitidos
