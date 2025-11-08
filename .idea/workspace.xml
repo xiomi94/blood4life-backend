@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="63ddb89c-7414-442c-9345-c6bcf6454e6e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/backend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BloodDonorCrudPage/BloodDonorCrudPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BloodDonorCrudPage/BloodDonorCrudPage.tsx" afterDir="false" />
+    <list default="true" id="ae3d35ce-bdcc-415d-ad66-ebbfe29138d4" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migration/V1__create_tables.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,11 +19,15 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 5
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
 }]]></component>
-  <component name="ProjectId" id="35Cdu1EBj8YYuNbwNzhsMeMz75G" />
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="35CsPuOCPxS8v6ELCFNQlJ3zRH0" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -31,7 +37,6 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "Spring Boot.Blood4lifeApplication.executor": "Run",
     "git-widget-placeholder": "feature/create-readme",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
@@ -39,35 +44,15 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "npm.dev.executor": "Run",
-    "ts.external.directory.path": "C:\\Users\\xiomara\\Documents\\proyectos\\blood4life\\frontend\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql",
+      "mongo"
+    ]
   }
 }]]></component>
-  <component name="RunManager" selected="npm.dev">
-    <configuration name="Blood4lifeApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
-      <module name="blood4life" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.xiojuandawt.blood4life.Blood4lifeApplication" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="dev" type="js.build_tools.npm" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/frontend/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="dev" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <list>
-      <item itemvalue="npm.dev" />
-      <item itemvalue="Spring Boot.Blood4lifeApplication" />
-    </list>
-  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -78,12 +63,13 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="63ddb89c-7414-442c-9345-c6bcf6454e6e" name="Changes" comment="" />
-      <created>1762618208442</created>
+      <changelist id="ae3d35ce-bdcc-415d-ad66-ebbfe29138d4" name="Changes" comment="" />
+      <created>1762625371546</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1762618208442</updated>
-      <workItem from="1762618209782" duration="1407000" />
+      <updated>1762625371546</updated>
+      <workItem from="1762625379013" duration="554000" />
+      <workItem from="1762626027573" duration="1110000" />
     </task>
     <servers />
   </component>
