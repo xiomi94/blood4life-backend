@@ -38,12 +38,13 @@ public class BloodDonorController {
       .body(bloodDonorInDatabase);
   }
 
-  @PutMapping
+  @PutMapping("/{id}")
   public ResponseEntity<?> updateBloodDonor(
-    @RequestBody BloodDonor updatedBloodDonor
+    @RequestBody BloodDonor updatedBloodDonor,
+    @PathVariable Integer id
   ) {
     try {
-      BloodDonorDTO bloodDonorInDatabase = this.bloodDonorService.update(updatedBloodDonor);
+      BloodDonorDTO bloodDonorInDatabase = this.bloodDonorService.update(updatedBloodDonor, id);
       return ResponseEntity
         .status(HttpStatus.OK)
         .body(bloodDonorInDatabase);

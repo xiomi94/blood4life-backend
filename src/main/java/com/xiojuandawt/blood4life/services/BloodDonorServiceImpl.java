@@ -40,13 +40,15 @@ public class BloodDonorServiceImpl implements BloodDonorService{
   }
 
   @Override
-  public BloodDonorDTO update(BloodDonor bloodDonor) {
-    Optional<BloodDonor> bloodDonorInDatabase = this.bloodDonorRepository.findById(bloodDonor.getId());
+  public BloodDonorDTO update(BloodDonor bloodDonor, Integer id) {
+    Optional<BloodDonor> bloodDonorInDatabase = this.bloodDonorRepository.findById(id);
 
     if (bloodDonorInDatabase.isEmpty()) {
       throw new ResourceNotFoundException();
     }
 
+    bloodDonor.setId(id);
+    bloodDonor.setPassword(bloodDonorInDatabase.orElseThrow().getPassword());
     BloodDonor updatedBloodDonor = this.bloodDonorRepository.save(bloodDonor);
     BloodDonorDTO updatedBloodDonorDTO = this.parseEntityToDto(updatedBloodDonor);
 
