@@ -3,6 +3,7 @@ import {bloodDonorService} from "../../services/bloodDonorService.ts";
 import type {BloodDonor} from "../../models/BloodDonor.ts";
 import BloodDonorTableItem from "../../components/BloodDonorTableItem.tsx";
 import BloodDonorForm from "../../components/BloodDonorForm.tsx";
+import {Link} from "react-router";
 
 
 function BloodDonorCrudPage() {
@@ -59,6 +60,19 @@ function BloodDonorCrudPage() {
         {bloodDonorRenderList}
         </tbody>
       </table>
+      <div
+        className="flex flex-col items-center m-5">
+        <li className="list-none">
+          <Link to="/index">
+            <button
+              type="button"
+              className="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Inicio
+            </button>
+          </Link>
+        </li>
+      </div>
     </div>
   )
 
