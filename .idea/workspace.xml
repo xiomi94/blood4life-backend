@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="63ddb89c-7414-442c-9345-c6bcf6454e6e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/backend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BloodDonorCrudPage/BloodDonorCrudPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BloodDonorCrudPage/BloodDonorCrudPage.tsx" afterDir="false" />
+    <list default="true" id="d2cf8290-5e4f-401e-9bea-9a4cffa125cb" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/frontend/.firebase/hosting.ZGlzdA.cache" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.firebase/hosting.ZGlzdA.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.firebaserc" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.firebaserc" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,9 +18,9 @@
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
   "customColor": "",
-  "associatedIndex": 5
+  "associatedIndex": 6
 }]]></component>
-  <component name="ProjectId" id="35Cdu1EBj8YYuNbwNzhsMeMz75G" />
+  <component name="ProjectId" id="35CbWyqJPCz8Wn4TkNETunEB9wk" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -30,44 +29,20 @@
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "Spring Boot.Blood4lifeApplication.executor": "Run",
-    "git-widget-placeholder": "feature/create-readme",
+    "git-widget-placeholder": "feature/fixing-index",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "E:/blood4life",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "npm.dev.executor": "Run",
-    "ts.external.directory.path": "C:\\Users\\xiomara\\Documents\\proyectos\\blood4life\\frontend\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "E:\\blood4life\\frontend\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="npm.dev">
-    <configuration name="Blood4lifeApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
-      <module name="blood4life" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.xiojuandawt.blood4life.Blood4lifeApplication" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="dev" type="js.build_tools.npm" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/frontend/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="dev" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <list>
-      <item itemvalue="npm.dev" />
-      <item itemvalue="Spring Boot.Blood4lifeApplication" />
-    </list>
-  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -78,12 +53,12 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="63ddb89c-7414-442c-9345-c6bcf6454e6e" name="Changes" comment="" />
-      <created>1762618208442</created>
+      <changelist id="d2cf8290-5e4f-401e-9bea-9a4cffa125cb" name="Changes" comment="" />
+      <created>1762617035126</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1762618208442</updated>
-      <workItem from="1762618209782" duration="1407000" />
+      <updated>1762617035126</updated>
+      <workItem from="1762617036281" duration="2446000" />
     </task>
     <servers />
   </component>
