@@ -1,4 +1,4 @@
-import Logo from "../images/Blood4LifeLogo.png"
+import Logo from "../images/LogoShadow.webp"
 import {Link} from "react-router";
 
 function Index() {
