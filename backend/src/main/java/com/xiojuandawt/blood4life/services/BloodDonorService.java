@@ -4,6 +4,7 @@ import com.xiojuandawt.blood4life.dto.BloodDonorDTO;
 import com.xiojuandawt.blood4life.entities.BloodDonor;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BloodDonorService {
 
@@ -14,4 +15,6 @@ public interface BloodDonorService {
   BloodDonorDTO update(BloodDonor bloodDonor, Integer id);
 
   void delete(int id);
+
+  Optional<BloodDonor> findByEmail(String email);
 }

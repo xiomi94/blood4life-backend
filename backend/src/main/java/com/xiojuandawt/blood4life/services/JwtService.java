@@ -4,6 +4,6 @@ import io.jsonwebtoken.Claims;
 
 public interface JwtService {
 
-  String generateToken(Integer EntityId, String entityType);
+  String generateToken(Integer entityId, String entityType);
   Claims extractPayload(String token);
 }
