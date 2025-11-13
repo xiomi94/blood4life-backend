@@ -66,4 +66,14 @@ public class HospitalServiceImpl implements HospitalService {
     hospitalDTO.setPhoneNumber(hospital.getPhoneNumber());
     return hospitalDTO;
   }
+
+  @Override
+  public Optional<Hospital> findById(Integer id) {
+    return this.hospitalRepository.findById(id);
+  }
+
+  @Override
+  public Optional<Hospital> findHospitalByEmail(String email) {
+    return this.hospitalRepository.findHospitalByEmail(email);
+  }
 }

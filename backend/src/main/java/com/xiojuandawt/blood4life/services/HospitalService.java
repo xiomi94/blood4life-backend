@@ -5,6 +5,7 @@ import com.xiojuandawt.blood4life.dto.HospitalDTO;
 import com.xiojuandawt.blood4life.entities.Hospital;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface HospitalService {
   List<HospitalDTO> findAll();
@@ -14,4 +15,7 @@ public interface HospitalService {
   HospitalDTO update(Hospital hospital);
 
   void delete(int id);
+
+  Optional<Hospital> findById(Integer id);
+  Optional<Hospital> findHospitalByEmail(String email);
 }

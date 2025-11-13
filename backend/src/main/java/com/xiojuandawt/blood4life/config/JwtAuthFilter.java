@@ -1,7 +1,9 @@
 package com.xiojuandawt.blood4life.config;
 
 import com.xiojuandawt.blood4life.entities.BloodDonor;
+import com.xiojuandawt.blood4life.entities.Hospital;
 import com.xiojuandawt.blood4life.services.BloodDonorService;
+import com.xiojuandawt.blood4life.services.HospitalService;
 import com.xiojuandawt.blood4life.services.JwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -28,6 +30,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
   private JwtService jwtService;
   @Autowired
   private BloodDonorService bloodDonorService;
+  @Autowired
+  private HospitalService hospitalService;
 
   // This method will be executed before reaching the controller to
   // tell Spring Boot if the user is logged in
@@ -61,8 +65,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         case "bloodDonor":
           this.authenticatedByBloodDonor(userId, token);
           break;
+        case "hospital":
+          this.authenticatedByHospital(userId, token);
+          break;
       }
-
     }
 
     chain.doFilter(request, response);
@@ -82,6 +88,29 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       // Creamos la autenticación a partir de una clase de Spring Boot
       UsernamePasswordAuthenticationToken autheticationObject = new UsernamePasswordAuthenticationToken(
         bloodDonor, null, roles
+      );
+
+      // Añadimos al contexto de la petición que el usuario esta logueado
+      // IMPORTANTE: ESTE PASO ES EL QUE LE DICE A SPRING BOOT QUE EL USUARIO ESTA LOGUEADO
+      // Este contexto se puede obtener desde el controlador.
+      SecurityContextHolder.getContext().setAuthentication(autheticationObject);
+    }
+  }
+
+  private void authenticatedByHospital(Integer id, String token) {
+    // Buscamos si existe ese usuario en la base de datos
+    // HAY MUCHAS ALTERNATIVAS TIENEN DESVENTAJAS Y VENTAJAS
+    Optional<Hospital> hospitalOptional = this.hospitalService.findById(id);
+    List<GrantedAuthority> roles = new ArrayList<>();
+    roles.add(new SimpleGrantedAuthority("ROLE_HOSPITAL"));
+
+    // Comprobamos si el token esta expirado
+    if (!this.jwtService.isTokenExpired(token) && hospitalOptional.isPresent()) {
+      Hospital hospital = hospitalOptional.orElseThrow();
+
+      // Creamos la autenticación a partir de una clase de Spring Boot
+      UsernamePasswordAuthenticationToken autheticationObject = new UsernamePasswordAuthenticationToken(
+        hospital, null, roles
       );
 
       // Añadimos al contexto de la petición que el usuario esta logueado
