@@ -10,5 +10,7 @@ import java.util.Optional;
 public interface BloodDonorRepository extends CrudRepository<BloodDonor, Integer> {
 
   Optional<BloodDonor> findByEmail(String email);
+
+  Optional<BloodDonor> findById(Integer id);
 }
 

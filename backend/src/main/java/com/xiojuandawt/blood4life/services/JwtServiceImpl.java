@@ -20,9 +20,12 @@ public class JwtServiceImpl implements JwtService {
 
   @Override
   public String generateToken(Integer EntityId, String entityType) {
+    System.out.println("Tiburcio-12");
     Map<String, Object> claims = new HashMap<>();
     claims.put("id", EntityId);
+    System.out.println("Tiburcio-10");
     claims.put("type", entityType);
+    System.out.println("Tiburcio-11");
 
     return Jwts.builder()
       .claims(claims) // Adding identity id and identity type to the token
@@ -43,6 +46,16 @@ public class JwtServiceImpl implements JwtService {
 
   private SecretKey getSigningKey() {
     return Keys.hmacShaKeyFor(this.SECRET_KEY.getBytes());
+  }
+
+  public boolean isTokenExpired(String token) {
+    Date expiration = Jwts.parser()
+      .verifyWith(getSigningKey())
+      .build()
+      .parseSignedClaims(token)
+      .getPayload()
+      .getExpiration();
+    return expiration.before(new Date(System.currentTimeMillis()));
   }
 }
 
