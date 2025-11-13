@@ -1,7 +1,9 @@
 package com.xiojuandawt.blood4life.controllers;
 
 import com.xiojuandawt.blood4life.entities.BloodDonor;
+import com.xiojuandawt.blood4life.entities.Hospital;
 import com.xiojuandawt.blood4life.services.BloodDonorService;
+import com.xiojuandawt.blood4life.services.HospitalService;
 import com.xiojuandawt.blood4life.services.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,9 @@ public class AuthController {
 
   @Autowired
   private BloodDonorService bloodDonorService;
+
+  @Autowired
+  private HospitalService hospitalService;
 
   @Autowired
   private JwtService jwtService;
@@ -49,42 +54,40 @@ public class AuthController {
   @PostMapping("/bloodDonor/login")
   public ResponseEntity<?> loginBloodDonor(@RequestHeader(value = "Authorization", required = true) String authHeader) {
     try {
-      System.out.println("Tiburcio-1");
+
       String[] credentials = extractCredentials(authHeader);
-      System.out.println("Tiburcio-2");
+
       String email = credentials[0];
       String password = credentials[1];
-      System.out.println("Tiburcio-3");
+
 
       Optional<BloodDonor> bloodDonorOpt = bloodDonorService.findByEmail(email);
-      System.out.println("Tiburcio-4");
+
       if (bloodDonorOpt.isEmpty()) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
           .body(Map.of("error", "Invalid credentials"));
       }
 
       BloodDonor bloodDonor = bloodDonorOpt.get();
-      System.out.println("Tiburcio-5");
 
       // Comparar contraseñas
       if (!passwordEncoder.matches(password, bloodDonor.getPassword())) {
-        System.out.println("Tiburcio-6");
+
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
           .body(Map.of("error", "Invalid credentials"));
       }
-      System.out.println("Tiburcio-6ymedio");
+
       // Generar token JWT
       String token = jwtService.generateToken(bloodDonor.getId(), "bloodDonor");
-      System.out.println("Tiburcio-7");
 
       Map<String, String> responseBody = new HashMap<>();
       responseBody.put("token", token);
-      System.out.println("Tiburcio-8");
+
       responseBody.put("status", "OK");
       return ResponseEntity.ok(responseBody);
 
     } catch (IllegalArgumentException e) {
-      System.out.println("Tiburcio-9");
+
       return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(Map.of("error", e.getMessage()));
     }
@@ -105,5 +108,66 @@ public class AuthController {
     }
 
     return decodedString.split(":", 2);
+  }
+
+  // 🔹 Registro de nuevo donante
+  @PostMapping("/hospital/register")
+  public ResponseEntity<Map<String, String>> registerHospital(@RequestBody Hospital hospital) {
+    // Comprobamos que no exista otro usuario con el mismo email
+    Optional<Hospital> existing = hospitalService.findHospitalByEmail(hospital.getEmail());
+    if (existing.isPresent()) {
+      return ResponseEntity.status(HttpStatus.CONFLICT)
+        .body(Map.of("error", "The email is already registered"));
+    }
+
+    // Encriptar contraseña
+    hospital.setPassword(passwordEncoder.encode(hospital.getPassword()));
+    hospitalService.createNew(hospital);
+
+    return ResponseEntity.status(HttpStatus.CREATED)
+      .body(Map.of("status", "OK"));
+  }
+
+  // 🔹 Login con Authorization: Basic base64(email:password)
+  @PostMapping("/hospital/login")
+  public ResponseEntity<?> loginHospital(@RequestHeader(value = "Authorization", required = true) String authHeader) {
+    try {
+
+      String[] credentials = extractCredentials(authHeader);
+
+      String email = credentials[0];
+      String password = credentials[1];
+
+
+      Optional<Hospital> hospitalOpt = hospitalService.findHospitalByEmail(email);
+
+      if (hospitalOpt.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+          .body(Map.of("error", "Invalid credentials"));
+      }
+
+      Hospital hospital = hospitalOpt.get();
+
+
+      // Comparar contraseñas
+      if (!passwordEncoder.matches(password, hospital.getPassword())) {
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+          .body(Map.of("error", "Invalid credentials"));
+      }
+      // Generar token JWT
+      String token = jwtService.generateToken(hospital.getId(), "hospital");
+
+      Map<String, String> responseBody = new HashMap<>();
+      responseBody.put("token", token);
+
+      responseBody.put("status", "OK");
+      return ResponseEntity.ok(responseBody);
+
+    } catch (IllegalArgumentException e) {
+
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(Map.of("error", e.getMessage()));
+    }
   }
 }
