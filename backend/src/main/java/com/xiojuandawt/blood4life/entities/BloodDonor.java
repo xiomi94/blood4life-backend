@@ -1,8 +1,14 @@
 package com.xiojuandawt.blood4life.entities;
 
+import io.jsonwebtoken.Jwts;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "blood_donor")

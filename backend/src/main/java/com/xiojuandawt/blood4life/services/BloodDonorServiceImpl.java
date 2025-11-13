@@ -78,4 +78,9 @@ public class BloodDonorServiceImpl implements BloodDonorService{
     return bloodDonorDTO;
   }
 
+  @Override
+  public Optional<BloodDonor> findByIdWithRole(Integer id) {
+    return this.bloodDonorRepository.findById(id);
+  }
+
 }

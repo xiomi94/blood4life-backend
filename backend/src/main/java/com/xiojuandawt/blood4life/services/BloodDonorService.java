@@ -17,4 +17,6 @@ public interface BloodDonorService {
   void delete(int id);
 
   Optional<BloodDonor> findByEmail(String email);
+
+  Optional<BloodDonor> findByIdWithRole(Integer id);
 }
