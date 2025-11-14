@@ -1,5 +1,5 @@
 import Logo from "../../images/LogoShadow.webp";
-import LoginForm from "./../../components/LoginForm.tsx";
+import LoginForm from "../../components/LoginForm/LoginForm.tsx";
 
 
 function Login() {

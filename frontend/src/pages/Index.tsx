@@ -1,6 +1,6 @@
 import Logo from "../images/LogoShadow.webp"
 import {Link} from "react-router";
-import ImageUpload from "../components/ImageUpload.tsx";
+import ImageUpload from "../components/ImageUpload/ImageUpload.tsx";
 
 function Index() {
   return (

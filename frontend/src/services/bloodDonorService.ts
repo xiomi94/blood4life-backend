@@ -17,6 +17,4 @@ export const bloodDonorService = {
     return axios.put(`${API_URL}/bloodDonor/${id}`, data);
   }
 
-
-
 }
