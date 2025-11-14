@@ -1,4 +1,4 @@
-import User from "../images/User.png";
+import User from "../../images/User.png";
 
 function Header() {
   return (
