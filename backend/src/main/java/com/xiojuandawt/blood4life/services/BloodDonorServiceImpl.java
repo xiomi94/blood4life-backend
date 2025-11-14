@@ -60,6 +60,10 @@ public class BloodDonorServiceImpl implements BloodDonorService{
     this.bloodDonorRepository.deleteById(id);
   }
 
+  public Optional<BloodDonor> findByEmail(String email) {
+    return bloodDonorRepository.findByEmail(email);
+  }
+
   public BloodDonorDTO parseEntityToDto(BloodDonor bloodDonor) {
     BloodDonorDTO bloodDonorDTO = new BloodDonorDTO();
     bloodDonorDTO.setId(bloodDonor.getId());
@@ -72,6 +76,11 @@ public class BloodDonorServiceImpl implements BloodDonorService{
     bloodDonorDTO.setDateOfBirth(bloodDonor.getDateOfBirth());
 
     return bloodDonorDTO;
+  }
+
+  @Override
+  public Optional<BloodDonor> findByIdWithRole(Integer id) {
+    return this.bloodDonorRepository.findById(id);
   }
 
 }
