@@ -8,9 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface BloodDonorRepository extends CrudRepository<BloodDonor, Integer> {
-
   Optional<BloodDonor> findByEmail(String email);
-
   Optional<BloodDonor> findById(Integer id);
 }
 

@@ -4,8 +4,8 @@ import BloodDonorCrudPage from "./pages/BloodDonorCrudPage/BloodDonorCrudPage.ts
 import HospitalCrudPage from "./pages/HospitalCrudPage/HospitalCrudPage.tsx";
 import Index from "./pages/Index.tsx";
 import Login from "./pages/Login/Login.tsx";
-import Header from "./components/Header.tsx";
-import Footer from "./components/Footer.tsx";
+import Header from "./components/Header/Header.tsx";
+import Footer from "./components/Footer/Footer.tsx";
 
 function App() {
 
@@ -16,7 +16,7 @@ function App() {
           <Header/>
           <BrowserRouter>
             <Routes>
-              <Route path='/*' element={<Index/>}/>
+
               <Route path='/index' element={<Index/>}/>
               <Route path='/login' element={<Login/>}/>
               <Route path='/bloodDonors' element={<BloodDonorCrudPage/>}/>
