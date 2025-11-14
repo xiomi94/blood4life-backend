@@ -47,7 +47,6 @@ function BloodDonorCrudPage() {
   return (
     <div className="min-w-6xl max-w-6xl mx-auto">
 
-      {/** ---------------------- FORMULARIO ------------------------ */}
       <div className="bg-white shadow p-6 rounded-lg mb-8">
         <h2 className="text-xl font-semibold mb-6">
           {selectedBloodDonor ? "Editar donante" : "Crear nuevo donante"}
@@ -60,7 +59,6 @@ function BloodDonorCrudPage() {
         />
       </div>
 
-      {/** ---------------------- LISTA ------------------------ */}
       <div className="bg-white shadow rounded-lg p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Lista de donantes</h2>
