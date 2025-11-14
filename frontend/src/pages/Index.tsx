@@ -1,9 +1,11 @@
 import Logo from "../images/LogoShadow.webp"
 import {Link} from "react-router";
+import ImageUpload from "../components/ImageUpload.tsx";
 
 function Index() {
   return (
     <>
+      <ImageUpload />
       <div className="flex flex-row justify-center aspect-auto">
         <img className="m-5 w-sm h-sm" src={Logo} alt="Logo"/>
       </div>

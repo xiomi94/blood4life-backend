@@ -1,9 +1,5 @@
 package com.xiojuandawt.blood4life.services;
 
-import com.xiojuandawt.blood4life.entities.Image;
-import com.xiojuandawt.blood4life.repositories.ImageRepository;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,59 +7,36 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
 @Service
 public class ImageService {
 
-  @Autowired
-  private ImageRepository imageRepository;
+  // Carpeta absoluta para evitar problemas de ruta
+  private final String uploadDir = System.getProperty("user.dir") + "/uploads";
 
-  private final Path rootLocation = Paths.get("uploads");
+  public String saveImage(MultipartFile file, String filename) throws IOException {
+    Path uploadPath = Paths.get(uploadDir);
 
-  @PostConstruct
-  public void init() {
-    try {
-      System.out.println("🟡 INICIANDO ImageService...");
-      System.out.println("📂 Ruta actual: " + Paths.get("").toAbsolutePath());
-
-      if (!Files.exists(rootLocation)) {
-        Files.createDirectories(rootLocation);
-        System.out.println("✅ Directorio uploads creado en: " + rootLocation.toAbsolutePath());
-      } else {
-        System.out.println("✅ Directorio uploads ya existe en: " + rootLocation.toAbsolutePath());
-      }
-
-      // Verificar permisos
-      System.out.println("🔐 Permisos de escritura: " + Files.isWritable(rootLocation));
-
-    } catch (IOException e) {
-      System.err.println("❌ Error creando directorio: " + e.getMessage());
-      e.printStackTrace();
+    // Crear directorio si no existe
+    if (!Files.exists(uploadPath)) {
+      Files.createDirectories(uploadPath);
     }
-  }
 
-  public String saveImage(MultipartFile file) throws IOException {
-    // 1. Guardar archivo en sistema de archivos
-    String originalFilename = file.getOriginalFilename();
-    String filename = System.currentTimeMillis() + "_" + originalFilename.replace(" ", "_");
-    Path destinationFile = rootLocation.resolve(filename);
+    Path filePath = uploadPath.resolve(filename);
 
-    Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
-
-    // 2. Guardar metadata en BD
-    Image image = new Image();
-    image.setName(originalFilename);
-    image.setRoute(destinationFile.toString());
-    image.setUrl("/api/images/" + filename);
-
-    imageRepository.save(image);
+    // Guardar el archivo de forma segura usando InputStream
+    Files.copy(file.getInputStream(), filePath);
 
     return filename;
   }
 
   public byte[] getImage(String filename) throws IOException {
-    Path file = rootLocation.resolve(filename);
-    return Files.readAllBytes(file);
+    Path filePath = Paths.get(uploadDir).resolve(filename);
+
+    if (!Files.exists(filePath)) {
+      throw new IOException("Archivo no encontrado: " + filename);
+    }
+
+    return Files.readAllBytes(filePath);
   }
 }
