@@ -1,32 +1,35 @@
 import './App.css'
-import {BrowserRouter, Route, Routes} from 'react-router';
-import BloodDonorCrudPage from "./pages/BloodDonorCrudPage/BloodDonorCrudPage.tsx";
-import HospitalCrudPage from "./pages/HospitalCrudPage/HospitalCrudPage.tsx";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import BloodDonorCrudPage from "./pages/BloodDonorFullCrudPage/BloodDonorCrudPage.tsx";
+import BloodDonorRegisterPage from "./pages/BloodDonorRegisterPage/BloodDonorRegisterPage.tsx";
+import HospitalCrudPage from "./pages/HospitalFullCrudPage/HospitalCrudPage.tsx";
+import HospitalRegisterPage from "./pages/HospitalRegisterPage/HospitalRegisterPage.tsx";
 import Index from "./pages/Index.tsx";
 import Login from "./pages/Login/Login.tsx";
+import Register from "./pages/Register/Register.tsx";
 import Header from "./components/Header/Header.tsx";
 import Footer from "./components/Footer/Footer.tsx";
 
 function App() {
-
   return (
-    <>
-      <div className="bg-gray-100">
+    <div className="bg-gray-100">
+      <BrowserRouter>
+        <Header/>
         <main>
-          <Header/>
-          <BrowserRouter>
-            <Routes>
-
-              <Route path='/index' element={<Index/>}/>
-              <Route path='/login' element={<Login/>}/>
-              <Route path='/bloodDonors' element={<BloodDonorCrudPage/>}/>
-              <Route path='/hospitals' element={<HospitalCrudPage/>}/>
-            </Routes>
-          </BrowserRouter>
-          <Footer/>
+          <Routes>
+            <Route path='/index' element={<Index/>}/>
+            <Route path='/login' element={<Login/>}/>
+            <Route path='/register' element={<Register/>}/>
+            <Route path='/bloodDonors' element={<BloodDonorCrudPage/>}/>
+            <Route path='/registerbloodDonor' element={<BloodDonorRegisterPage/>}/>
+            <Route path='/hospitals' element={<HospitalCrudPage/>}/>
+            <Route path='/registerHospital' element={<HospitalRegisterPage/>}/>
+            <Route path='/' element={<Index/>}/>
+          </Routes>
         </main>
-      </div>
-    </>
+        <Footer/>
+      </BrowserRouter>
+    </div>
   )
 }
 
