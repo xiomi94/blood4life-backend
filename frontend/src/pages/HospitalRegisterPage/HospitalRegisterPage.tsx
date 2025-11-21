@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import {Link} from "react-router-dom";
 import ImageUpload from "../../components/ImageUpload/ImageUpload.tsx";
 
 interface Hospital {
@@ -20,6 +19,15 @@ interface HospitalFormData {
   password: string;
 }
 
+interface FormErrors {
+  cif?: string;
+  name?: string;
+  address?: string;
+  email?: string;
+  phoneNumber?: string;
+  password?: string;
+}
+
 const HospitalRegisterPage: React.FC = () => {
   const [formData, setFormData] = useState<HospitalFormData>({
     cif: '',
@@ -33,79 +41,221 @@ const HospitalRegisterPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [currentHospital, setCurrentHospital] = useState<Hospital | null>(null);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [profileImage, setProfileImage] = useState<File | null>(null);
 
   useEffect(() => {
     const hospitalData: Hospital = {
-      id: 1,
-      cif: 'A12345678',
-      name: 'Hospital General',
-      address: 'Calle Principal 123',
-      email: 'hospital@ejemplo.com',
-      phoneNumber: '+34 912 345 678'
+      id: 0,
+      cif: '',
+      name: '',
+      address: '',
+      email: '',
+      phoneNumber: ''
     };
     setCurrentHospital(hospitalData);
-
-    setFormData({
-      cif: hospitalData.cif,
-      name: hospitalData.name,
-      address: hospitalData.address,
-      email: hospitalData.email,
-      phoneNumber: hospitalData.phoneNumber,
-      password: ''
-    });
   }, []);
+
+  const validateField = (name: string, value: string): string => {
+    switch (name) {
+      case 'cif':
+        if (!value.trim()) return 'El CIF es obligatorio';
+        if (!/^[A-Za-z0-9]{8,10}$/.test(value)) return 'El CIF debe tener entre 8 y 10 caracteres alfanuméricos';
+        if (!/^[A-Za-z]/.test(value)) return 'El CIF debe comenzar con una letra';
+        return '';
+
+      case 'name':
+        if (!value.trim()) return 'El nombre es obligatorio';
+        if (value.trim().length < 2) return 'El nombre debe tener al menos 2 caracteres';
+        if (value.trim().length > 100) return 'El nombre no puede exceder 100 caracteres';
+        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-\.&()]+$/.test(value)) return 'El nombre solo puede contener letras, espacios y los caracteres .-&()';
+        if (/[0-9]/.test(value)) return 'El nombre no puede contener números';
+        if (/[@#~€¬]/.test(value)) return 'El nombre contiene caracteres no válidos';
+        if (/(.)\1{4,}/.test(value)) return 'Demasiados caracteres repetidos';
+        return '';
+
+      case 'address':
+        if (!value.trim()) return 'La dirección es obligatoria';
+        if (value.trim().length < 10) return 'La dirección debe tener al menos 10 caracteres';
+        if (value.trim().length > 200) return 'La dirección no puede exceder 200 caracteres';
+        if (!/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ\s\-\.,#ºª°/:ºª()&]+$/.test(value)) return 'La dirección contiene caracteres no válidos';
+        if (!/\d/.test(value)) return 'La dirección debe incluir un número';
+        const words = value.trim().split(/\s+/).filter(word => /[a-zA-Z]{3,}/.test(word));
+        if (words.length === 0) return 'La dirección debe incluir el nombre de una calle válido';
+        const addressParts = value.trim().split(/(?<=\D)(?=\d)|(?<=\d)(?=\D)/);
+        const hasStreetAndNumber = addressParts.some(part => /^\d+$/.test(part)) &&
+          addressParts.some(part => /[a-zA-Z]{3,}/.test(part));
+        if (!hasStreetAndNumber) return 'La dirección debe incluir tanto el nombre de la calle como el número';
+        if (/[.,\-]{3,}/.test(value)) return 'Demasiados caracteres especiales consecutivos';
+        const lettersOnly = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]/g, '');
+        if (lettersOnly.length < 3) return 'La dirección debe contener al menos 3 letras';
+        const commonPatterns = [
+          /^(Calle|Avenida|Av\.|Plaza|Paseo|Camino|Travesía|C\/)\s+[a-zA-Z]/,
+          /^[a-zA-Z]+\s+[a-zA-Z]+\s+\d+/,
+          /^\d+\s+[a-zA-Z]+/,
+          /^[a-zA-Z]+\s+\d+/,
+        ];
+        const isValidFormat = commonPatterns.some(pattern => pattern.test(value.trim()));
+        if (!isValidFormat) return 'Formato de dirección no reconocido. Ejemplos: "Calle Mayor 123", "Av. Constitución 45"';
+        return '';
+
+      case 'email':
+        if (!value.trim()) return 'El email es obligatorio';
+        if (value.length > 100) return 'El email no puede exceder 100 caracteres';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'El formato del email no es válido';
+        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) return 'El formato del email no es válido';
+        if (value.includes(' ')) return 'El email no puede contener espacios';
+        const domain = value.split('@')[1];
+        if (domain && domain.length < 4) return 'El dominio del email es demasiado corto';
+        return '';
+
+      case 'phoneNumber':
+        if (!value.trim()) return 'El teléfono es obligatorio';
+        const digitsOnly = value.replace(/\D/g, '');
+        if (digitsOnly.length < 9) return 'El teléfono debe tener al menos 9 dígitos';
+        if (digitsOnly.length > 12) return 'El teléfono no puede tener más de 12 dígitos';
+        if (!/^(\+?\d{1,3}[-.\s]?)?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(value)) return 'Formato de teléfono no válido';
+        if (/(\d)\1{7,}/.test(digitsOnly)) return 'Número de teléfono no válido';
+        return '';
+
+      case 'password':
+        if (!value.trim()) return 'La contraseña es obligatoria';
+        if (value.length < 8) return 'La contraseña debe tener al menos 8 caracteres';
+        if (value.length > 32) return 'La contraseña no puede exceder 32 caracteres';
+        if (!/(?=.*[a-z])/.test(value)) return 'La contraseña debe contener al menos una minúscula';
+        if (!/(?=.*[A-Z])/.test(value)) return 'La contraseña debe contener al menos una mayúscula';
+        if (!/(?=.*\d)/.test(value)) return 'La contraseña debe contener al menos un número';
+        if (!/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(value)) return 'La contraseña contiene caracteres no permitidos';
+        if (/\s/.test(value)) return 'La contraseña no puede contener espacios';
+        if (/(.)\1{3,}/.test(value)) return 'Demasiados caracteres repetidos';
+        return '';
+
+      default:
+        return '';
+    }
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+
+    Object.keys(formData).forEach(key => {
+      const error = validateField(key, formData[key as keyof HospitalFormData]);
+      if (error) {
+        newErrors[key as keyof FormErrors] = error;
+      }
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
+
+    let sanitizedValue = value;
+
+    switch (name) {
+      case 'name':
+        sanitizedValue = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-\.&()]/g, '');
+        if (sanitizedValue.length > 100) sanitizedValue = sanitizedValue.substring(0, 100);
+        break;
+      case 'cif':
+        sanitizedValue = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+        if (sanitizedValue.length > 10) sanitizedValue = sanitizedValue.substring(0, 10);
+        break;
+      case 'phoneNumber':
+        sanitizedValue = value.replace(/[^\d+\-\s()]/g, '');
+        if (sanitizedValue.length > 15) sanitizedValue = sanitizedValue.substring(0, 15);
+        break;
+      case 'email':
+        sanitizedValue = value.toLowerCase().replace(/\s/g, '');
+        if (sanitizedValue.length > 100) sanitizedValue = sanitizedValue.substring(0, 100);
+        break;
+      case 'password':
+        sanitizedValue = value.replace(/\s/g, '');
+        if (sanitizedValue.length > 32) sanitizedValue = sanitizedValue.substring(0, 32);
+        break;
+      case 'address':
+        sanitizedValue = value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ\s\-\.,#ºª°/:ºª()&]/g, '');
+        sanitizedValue = sanitizedValue.replace(/[.,\-]{3,}/g, match => match.substring(0, 2));
+        sanitizedValue = sanitizedValue.replace(/\s{2,}/g, ' ');
+        sanitizedValue = sanitizedValue.replace(/\b\w/g, char => char.toUpperCase());
+        if (sanitizedValue.length > 200) sanitizedValue = sanitizedValue.substring(0, 200);
+        break;
+    }
+
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: sanitizedValue
+    }));
+
+    const error = validateField(name, sanitizedValue);
+    setErrors(prev => ({
+      ...prev,
+      [name]: error
     }));
   };
 
-  const handleUpdate = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!currentHospital) {
-      alert('No hay datos del hospital disponibles');
+    if (!validateForm()) {
+      alert('Por favor, corrige los errores en el formulario');
       return;
     }
 
     setLoading(true);
 
     try {
-      console.log('Actualizando hospital:', formData);
+      const submitData = new FormData();
+      submitData.append('cif', formData.cif);
+      submitData.append('name', formData.name);
+      submitData.append('address', formData.address);
+      submitData.append('email', formData.email);
+      submitData.append('phoneNumber', formData.phoneNumber);
+      submitData.append('password', formData.password);
+
+      if (profileImage) {
+        submitData.append('profileImage', profileImage);
+      }
+
+      console.log('Registrando hospital:', Object.fromEntries(submitData));
+      console.log('Imagen de perfil:', profileImage);
+
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      setCurrentHospital(prev => prev ? {
-        ...prev,
-        cif: formData.cif,
-        name: formData.name,
-        address: formData.address,
-        email: formData.email,
-        phoneNumber: formData.phoneNumber
-      } : null);
+      alert('Hospital registrado exitosamente');
 
-      alert('Datos del hospital actualizados exitosamente');
+      setFormData({
+        cif: '',
+        name: '',
+        address: '',
+        email: '',
+        phoneNumber: '',
+        password: ''
+      });
+      setProfileImage(null);
+      setErrors({});
+
     } catch (error) {
-      console.error('Error actualizando hospital:', error);
-      alert('Error al actualizar los datos del hospital');
+      console.error('Error registrando hospital:', error);
+      alert('Error al registrar el hospital');
     } finally {
       setLoading(false);
     }
   };
 
   const resetForm = () => {
-    if (currentHospital) {
-      setFormData({
-        cif: currentHospital.cif,
-        name: currentHospital.name,
-        address: currentHospital.address,
-        email: currentHospital.email,
-        phoneNumber: currentHospital.phoneNumber,
-        password: ''
-      });
-    }
+    setFormData({
+      cif: '',
+      name: '',
+      address: '',
+      email: '',
+      phoneNumber: '',
+      password: ''
+    });
+    setProfileImage(null);
+    setErrors({});
     setShowPassword(false);
   };
 
@@ -118,7 +268,7 @@ const HospitalRegisterPage: React.FC = () => {
             <path className="opacity-75" fill="currentColor"
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          Cargando datos del hospital...
+          Cargando...
         </div>
       </div>
     );
@@ -127,19 +277,16 @@ const HospitalRegisterPage: React.FC = () => {
   return (
     <div className="flex flex-col w-full h-full items-center bg-gray-100 min-h-screen">
       <div className="flex flex-col w-11/12 max-w-6xl">
-
-        {/* Sección Superior: Formulario e Imagen */}
-        <div className="flex flex-col lg:flex-row gap-8 pt-10">
-
-          {/* Formulario */}
+        <div className="flex flex-col gap-8 pt-10">
           <div className="flex-1">
             <form
-              onSubmit={handleUpdate}
+              onSubmit={handleSubmit}
               className="flex flex-col p-6 bg-gray-200 rounded-2xl drop-shadow"
             >
-              <h2 className="text-xl font-semibold text-gray-800 mb-6">
-                Gestionar datos del hospital
+              <h2 className="text-xl font-semibold text-gray-800 mb-1">
+                Registrar nuevo hospital
               </h2>
+              <p className="text-gray-600 mb-5">Todos los datos son obligatorios</p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                 <div className="w-full">
                   <label htmlFor="cif" className="block text-md font-bold text-black mb-1">
@@ -153,10 +300,14 @@ const HospitalRegisterPage: React.FC = () => {
                     onChange={handleInputChange}
                     required
                     disabled={loading}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 bg-white drop-shadow"
-                    placeholder="Ingrese el CIF *"
+                    className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 bg-white drop-shadow ${
+                      errors.cif ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    placeholder="Ingrese el CIF"
                   />
+                  {errors.cif && <p className="text-red-500 text-sm mt-1">{errors.cif}</p>}
                 </div>
+
                 <div className="flex justify-center">
                   <div className="w-full">
                     <label htmlFor="name" className="w-fit block text-md font-bold text-black mb-1">
@@ -170,11 +321,15 @@ const HospitalRegisterPage: React.FC = () => {
                       onChange={handleInputChange}
                       required
                       disabled={loading}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 bg-white drop-shadow"
-                      placeholder="Ingrese el nombre *"
+                      className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 bg-white drop-shadow ${
+                        errors.name ? 'border-red-500' : 'border-gray-300'
+                      }`}
+                      placeholder="Ingrese el nombre"
                     />
+                    {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
                   </div>
                 </div>
+
                 <div className="flex flex-row justify-end">
                   <div className="flex flex-col justify-end w-full">
                     <label htmlFor="address" className="block text-md font-bold text-black mb-1">
@@ -188,11 +343,15 @@ const HospitalRegisterPage: React.FC = () => {
                       onChange={handleInputChange}
                       required
                       disabled={loading}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 bg-white drop-shadow"
-                      placeholder="Ingrese la dirección *"
+                      className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 bg-white drop-shadow ${
+                        errors.address ? 'border-red-500' : 'border-gray-300'
+                      }`}
+                      placeholder="Ingrese la dirección"
                     />
+                    {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
                   </div>
                 </div>
+
                 <div className="w-full">
                   <label htmlFor="email" className="block text-md font-bold text-black mb-1">
                     Email
@@ -203,11 +362,16 @@ const HospitalRegisterPage: React.FC = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
+                    required
                     disabled={loading}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 bg-white drop-shadow"
-                    placeholder="Ingrese el email"
+                    className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 bg-white drop-shadow ${
+                      errors.email ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    placeholder="Ingrese el email *"
                   />
+                  {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                 </div>
+
                 <div className="flex justify-center">
                   <div className="w-full">
                     <label htmlFor="phoneNumber" className="block text-md font-bold text-black mb-1">
@@ -219,12 +383,17 @@ const HospitalRegisterPage: React.FC = () => {
                       name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
+                      required
                       disabled={loading}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 bg-white drop-shadow"
+                      className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 bg-white drop-shadow ${
+                        errors.phoneNumber ? 'border-red-500' : 'border-gray-300'
+                      }`}
                       placeholder="Ingrese el teléfono"
                     />
+                    {errors.phoneNumber && <p className="text-red-500 text-sm mt-1">{errors.phoneNumber}</p>}
                   </div>
                 </div>
+
                 <div className="flex flex-row justify-end">
                   <div className="flex flex-col justify-end w-full">
                     <label htmlFor="password" className="block text-md font-bold text-black mb-1">
@@ -237,9 +406,12 @@ const HospitalRegisterPage: React.FC = () => {
                         name="password"
                         value={formData.password}
                         onChange={handleInputChange}
+                        required
                         disabled={loading}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 bg-white drop-shadow pr-10"
-                        placeholder="Ingrese la contraseña *"
+                        className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 bg-white drop-shadow pr-10 ${
+                          errors.password ? 'border-red-500' : 'border-gray-300'
+                        }`}
+                        placeholder="Ingrese la contraseña"
                       />
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                         <button
@@ -262,6 +434,7 @@ const HospitalRegisterPage: React.FC = () => {
                         </button>
                       </div>
                     </div>
+                    {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                   </div>
                 </div>
               </div>
@@ -280,7 +453,7 @@ const HospitalRegisterPage: React.FC = () => {
                               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
                       Procesando...
-                    </>) : 'Actualizar datos'}
+                    </>) : 'Registrar hospital'}
                 </button>
                 <button
                   type="button"
@@ -294,56 +467,8 @@ const HospitalRegisterPage: React.FC = () => {
             </form>
           </div>
 
-          {/* Componente de Imagen */}
-          <div className="lg:w-96">
-            <ImageUpload/>
-          </div>
-        </div>
-
-        {/* Información Actual del Hospital */}
-        <div className="flex flex-col w-full h-fit pt-10 drop-shadow">
-          <div className="bg-white rounded-lg border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800">Información actual del hospital</h2>
-            </div>
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h3 className="text-sm font-bold text-gray-500 uppercase">CIF</h3>
-                  <p className="text-lg font-semibold text-gray-900">{currentHospital.cif}</p>
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-gray-500 uppercase">Nombre</h3>
-                  <p className="text-lg font-semibold text-gray-900">{currentHospital.name}</p>
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-gray-500 uppercase">Dirección</h3>
-                  <p className="text-lg font-semibold text-gray-900">{currentHospital.address}</p>
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-gray-500 uppercase">Email</h3>
-                  <p className="text-lg font-semibold text-gray-900">{currentHospital.email}</p>
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-gray-500 uppercase">Teléfono</h3>
-                  <p className="text-lg font-semibold text-gray-900">{currentHospital.phoneNumber}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Botón de Inicio */}
-          <div className="flex flex-col items-center m-5">
-            <li className="list-none">
-              <Link to="/index">
-                <button
-                  type="button"
-                  className="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-bold rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Inicio
-                </button>
-              </Link>
-            </li>
+          <div className="flex flex-row w-full justify-center">
+            <ImageUpload onImageChange={setProfileImage}/>
           </div>
         </div>
       </div>

@@ -1,10 +1,17 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
-const ImageUpload = () => {
+interface ImageUploadProps {
+  onImageChange: (file: File | null) => void;
+}
+
+const ImageUpload = ({ onImageChange }: ImageUploadProps) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>('');
-  const [isUploading, setIsUploading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    onImageChange(selectedImage);
+  }, [selectedImage, onImageChange]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -25,34 +32,6 @@ const ImageUpload = () => {
     }
   };
 
-  const handleUpload = async () => {
-    if (!selectedImage) return;
-
-    setIsUploading(true);
-    const formData = new FormData();
-    formData.append('image', selectedImage);
-
-    try {
-      const response = await fetch('http://localhost:8080/api/images/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log('Imagen subida:', result);
-        alert('Imagen de perfil subida exitosamente');
-      } else {
-        throw new Error('Error en la subida');
-      }
-    } catch (error) {
-      console.error('Error subiendo imagen:', error);
-      alert('Error al subir la imagen. Por favor, intenta nuevamente.');
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
   const handleRemoveImage = () => {
     setSelectedImage(null);
     setPreviewUrl('');
@@ -66,7 +45,7 @@ const ImageUpload = () => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-4 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+    <div className="flex flex-col w-1/2 items-center space-y-4 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
       <h3 className="text-lg font-semibold text-gray-800">Foto de Perfil</h3>
       <div className="flex flex-col items-center space-y-4 w-full">
         {previewUrl ? (
@@ -103,14 +82,6 @@ const ImageUpload = () => {
           onChange={handleImageChange}
           className="hidden"
         />
-        {!previewUrl && (
-          <button
-            onClick={triggerFileInput}
-            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors font-medium text-sm"
-          >
-            Seleccionar Imagen
-          </button>
-        )}
         <div className="text-center">
           <p className="text-xs text-gray-500">
             Formatos: JPG, PNG
@@ -120,24 +91,14 @@ const ImageUpload = () => {
           </p>
         </div>
         {previewUrl && (
-          <button
-            onClick={handleUpload}
-            disabled={isUploading}
-            className={`px-6 py-2 rounded-lg font-medium text-sm transition-colors ${
-              isUploading
-                ? 'bg-gray-400 cursor-not-allowed text-gray-200'
-                : 'bg-green-500 hover:bg-green-600 text-white'
-            }`}
-          >
-            {isUploading ? (
-              <div className="flex items-center space-x-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                <span>Subiendo...</span>
-              </div>
-            ) : (
-              'Guardar Foto'
-            )}
-          </button>
+          <div className="text-center">
+            <p className="text-sm text-green-600 font-medium">
+              ✓ Imagen lista para guardar
+            </p>
+            <p className="text-xs text-gray-500 mt-1">
+              Se guardará al registrar el hospital
+            </p>
+          </div>
         )}
       </div>
     </div>
