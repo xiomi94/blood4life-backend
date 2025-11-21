@@ -3,7 +3,7 @@ import Logo from "../images/LogoShadow.webp"
 function Index() {
   return (
     <>
-      <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center min-h-screen">
         <div className="flex flex-row justify-center aspect-auto">
           <img className="m-5 w-sm h-sm" src={Logo} alt="Logo"/>
         </div>
